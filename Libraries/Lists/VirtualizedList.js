@@ -217,10 +217,15 @@ class VirtualizedList extends React.PureComponent<OptionalProps, Props, State> {
         'otherwise there is no way to know the location of an arbitrary index.',
     );
     const frame = this._getFrameMetricsApprox(index);
-    const offset = Math.max(
+    let offset;
+    if((frame.offset - frame.length + this._scrollMetrics.visibleLength) >= this._totalCellLength) {
+      offset = this._totalCellLength - this._scrollMetrics.visibleLength;
+    } else {
+      offset = Math.max(
       0,
       frame.offset - (viewPosition || 0) * (this._scrollMetrics.visibleLength - frame.length),
-    ) - (viewOffset || 0);
+      ) - (viewOffset || 0);
+    }
     this._scrollRef.scrollTo(horizontal ? {x: offset, animated} : {y: offset, animated});
   }
 
